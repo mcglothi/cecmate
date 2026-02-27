@@ -93,13 +93,24 @@ cp secrets.yaml.example secrets.yaml
 #   esphome -q config generate-api-key
 ```
 
-Edit `tv-cec.yaml` and set `physical_address` to match which HDMI port you plug into:
+Edit `tv-cec.yaml` and make these per-device changes:
+
+**1. Set a unique device name** — controls the hostname and Home Assistant entity IDs. If you deploy multiple CECmate devices, each must have a different name:
+```yaml
+esphome:
+  name: bedroom-cec        # unique per device
+  friendly_name: Bedroom TV CEC Controller
+```
+
+**2. Set `physical_address`** to match which HDMI port you plug into:
 
 | HDMI Port | physical_address |
 |-----------|-----------------|
 | HDMI 1 | `0x1000` |
 | HDMI 2 | `0x2000` |
 | HDMI 3 | `0x3000` |
+
+**3. Adjust the Power On opcode for non-Samsung TVs** — the default config uses `0x86` (Set Stream Path), which works best on Samsung. For LG, Sony, and Panasonic, change the Power On button's second send to use `0x82` (Active Source) instead. See the comment in `tv-cec.yaml` and [Known Issues](#known-issues--quirks) below.
 
 ### 3. Flash (first time, USB only)
 
@@ -175,11 +186,19 @@ If you'd like to be notified when it's available, **star this repo**.
 
 ## Known Issues / Quirks
 
-- **ESPHome 2026.x compatibility:** The `johnboiles/esphome-hdmi-cec` external component
-  has a bug where `add_library()` passes `None` as the library name, which newer ESPHome
-  rejects. If you hit this, patch
-  `.esphome/external_components/.../hdmi_cec/__init__.py` line ~107:
-  change `None` to `"CEC"`.
+- **ESPHome 2026.x — required one-time patch:** The `johnboiles/esphome-hdmi-cec` external
+  component has a bug where `add_library()` passes `None` as the library name, which ESPHome
+  2026.x rejects. Your first compile will fail. After it does, patch the cached file:
+  ```bash
+  # Find the file (the hash in the path varies per machine):
+  find ~/.esphome/external_components -path "*/hdmi_cec/__init__.py"
+
+  # Edit it — around line 107, change:
+  #   cg.add_library(None, None, ...)
+  # to:
+  #   cg.add_library("CEC", None, ...)
+  ```
+  Then re-run `esphome run tv-cec.yaml`. Only needs doing once per machine.
 
 - **Samsung power-on sequence:** Samsung TVs respond better to `Set Stream Path` (opcode
   `0x86`) than `Active Source` (`0x82`) for input switching after wake. The included
