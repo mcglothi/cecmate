@@ -24,9 +24,9 @@ Control any CEC-capable TV's power and input switching from scripts, automations
 | Component | Qty | Notes |
 |-----------|-----|-------|
 | ESP32-WROOM-32 dev board | 1 | Any `esp32dev`-compatible board |
-| Spare HDMI cable | 1 | Cut the TV end off — only 2 wires needed |
+| Spare HDMI cable | 1 | Cut one end off — either end works, HDMI cables are not directional |
 | 10kΩ resistor | 1 | ¼W, any tolerance |
-| USB power supply | 1 | 5V micro-USB or USB-C depending on board |
+| USB power supply | 1 | 5V micro-USB or USB-C — **the TV's own USB port works great** and keeps everything on one power switch |
 
 **Total cost: ~$5–8**
 
