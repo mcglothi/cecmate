@@ -17,7 +17,7 @@ wifi:
   #   subnet: 255.255.255.0
   ap:
     ssid: "TV-CEC Fallback"
-    password: "fallback123"
+    password: !secret ap_fallback_password
 
 captive_portal:
 logger:
