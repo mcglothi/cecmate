@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/hero-graphic.png" alt="CECmate" width="1000" />
+</p>
+
 # CECmate
 
 **WiFi-connected HDMI CEC controller built on ESP32 + ESPHome.**
